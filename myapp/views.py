@@ -23,26 +23,40 @@ def upload(request):
     return render(request, 'Patient/upload.html')
 
 def your_template(request):
-    cursor1,cursor2 = connection.cursor()
+    cursor2 = connection.cursor()
+    cursor1 = connection.cursor()
     
+    uname= request.POST.get('user_name')
+    print(type(uname))
     X=[]
     for i in range(2801):
         X.append(i)
-    #cursor1.execute("SELECT oxyvalue FROM Endpoint WHERE pexid ='PEx1' AND channelid='CH1'")
-    cursor2.execute("SELECT deoxyvalue FROM Endpoint WHERE pexid ='PEx1' AND channelid='CH1'")
-    #Y = cursor1.fetchall()
+    s= uname 
+    queries1=""" SELECT oxyvalue FROM Endpoint WHERE pexid = '"""+ s + """' AND channelid='CH1'"""
+    queries2=""" SELECT deoxyvalue FROM Endpoint WHERE pexid = '"""+ s + """' AND channelid='CH1'"""
+     
+    cursor1.execute(queries1,{'s':uname} )
+    cursor2.execute(queries2,{'s':uname})
+    Y = cursor1.fetchall()
+    print(Y)
     Y1 = cursor2.fetchall()
-    #plt.plot(X,Y,color='g',label='Oxy')
-    plt.plot(X,Y1,color='b',label='Deoxy')
+    plt.plot(X,Y,color='g',label='Oxy')
+    plt.plot(X,Y1,label='Deoxy')
     plt.legend()
     plt.xlabel('Time in 1/10 th sec')
     plt.ylabel('Conc values')
-    return render(request, 'Patient/template.html',{'query': plt.show()}) 
+    return render(request, 'Patient/TemporalPlot.html',{'plot': plt.show(),'name':uname}) 
 
 def whatever(request):
     a=np.array([1,2,3,4])
 
     return render(request, 'Patient/trypython.html',{'query': a}) 
+
+def Tplot_form(request):
+    return render(request, 'Patient/TplotForm.html')    
+
+def register(request):
+    return render(request, 'Patient/TplotForm.html')    
         
 
 '''def dashboard_with_pivot(request):

@@ -1,0 +1,14 @@
+<form action="/app/Tplot" method="post">
+    {% csrf_token %}
+    <ul>
+        <li>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="user_name" placeholder="name">
+        </li>
+        <li>
+            <label for="mail">E-mail:</label>
+            <input type="email" id="mail" name="user_email" placeholder="user_email">
+        </li>
+        <input type="submit" value="Submit">
+    </ul>
+</form>
