@@ -1,0 +1,8 @@
+{% extends 'Patient\base.html' %}
+{% block content %}
+<form action="Patient/template.html" method="post">
+    {% csrf_token %}
+    <input name="hiya">
+    <input type="submit">
+  </form>
+{% endblock %}
