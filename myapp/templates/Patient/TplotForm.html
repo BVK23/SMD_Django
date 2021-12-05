@@ -1,14 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.myDiv {
+  border: 5px outset red;
+  background-color: lightblue;    
+  text-align: center;
+}
+
+.myDiv1 {
+  border: 2px outset black;
+  background-color: white;
+  text-align: center;
+  font-size: 25px;
+}
+</style>
+</head>
+
+<body style="background-color:powderblue;">
+
+<div class="myDiv">
+  <h2>TEMPORAL PLOT VISUALIZATION</h2>
+</div>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<div class = "myDiv1">
 <form action="/app/Tplot" method="post">
     {% csrf_token %}
-    <ul>
-        <li>
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="user_name" placeholder="name">
-        </li>
-        <li>
-            <label for="mail">E-mail:</label>
-            <input type="email" id="mail" name="user_email" placeholder="user_email">
-        </li>
-        <input type="submit" value="Submit">
-    </ul>
+    <label for="name">Name:</label>
+    <select name="patient1" id="patient">        
+    <option >{{patient.0}}</option>
+    <option >{{patient.1}}</option>
+    <option >{{patient.2}}</option>
+    <option >{{patient.3}}</option>
+    <option >{{patient.4}}</option>
+    <option >{{patient.5}}</option>
+    <option >{{patient.6}}</option>
+    <option >{{patient.7}}</option>
+    <option >{{patient.8}}</option>
+    <option >{{patient.9}}</option>            
+    </select><br><br>        
+    
+  
+    <label for="channel">Select Channel:</label>
+    <select name="channelid" id="channel">
+    <option >{{Channel.0}}</option>
+    <option >{{Channel.1}}</option>
+    <option >{{Channel.2}}</option>
+    <option >{{Channel.3}}</option>
+    <option >{{Channel.4}}</option>
+    <option >{{Channel.5}}</option>
+    <option >{{Channel.6}}</option>
+    <option >{{Channel.7}}</option>
+    <option >{{Channel.8}}</option>
+    <option >{{Channel.9}}</option>
+
+    </select><br><br>
+    
+    <label for="Excercise">Choose Excercise:</label>
+    <select name="excercise1" id="excercise">
+    <option >{{exercise.0}}</option>
+    <option >{{exercise.1}}</option>
+    <option >{{exercise.2}}</option>
+    <option >{{exercise.3}}</option>
+    </select><br><br>
+    
+    <input type="submit" value="Submit">
+    <br><br>
+    
 </form>
+</div>
+<div><h7>Figure will pop up on sumbit, you can save it</h7></div>

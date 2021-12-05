@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+  <head>
+    <meta http-equiv="refresh" 
+        content="10; url = /app/Splotform" />
+    <title>Patient_Fnirs</title>
+  </head>
+  <body>
+    <h2>Patient {{name}}</h2>
+    <p>Displayed Spatial plot of variance of {{oxydeoxy}} for {{exerid}} Exercise based on the image map of channels (1 to 24) </p>
+    <p><img src="{% static 'images/channel_loc_fnirs.jpg' %}" alt="Channel Location"></p>
+    
+  </body>
+
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.myDiv {
+  border: 4px outset purple;
+  background-color: lightpink;    
+  text-align: center;
+}
+
+.myDiv1 {
+  border: 2px outset black;
+  background-color: white;
+  text-align: center;
+  font-size: 25px;
+}
+</style>
+</head>
+
+<body style="background-color:green;">
+
+<div class="myDiv">
+  <h2>SPATIAL PLOT VISUALIZATION</h2>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<div class = "myDiv1">
+<form action="/app/Splot" method="post">
+  {% csrf_token %}
+  <label for="name">Name:</label>
+    <select name="patient1" id="patient">        
+    <option >{{patient.0}}</option>
+    <option >{{patient.1}}</option>
+    <option >{{patient.2}}</option>
+    <option >{{patient.3}}</option>
+    <option >{{patient.4}}</option>
+    <option >{{patient.5}}</option>
+    <option >{{patient.6}}</option>
+    <option >{{patient.7}}</option>
+    <option >{{patient.8}}</option>
+    <option >{{patient.9}}</option>            
+    </select><br><br> 
+  
+  <label for="oxydeoxy">Select Oxy/Deoxy:</label>
+  <select name="oxydeoxy" id="channel">
+  <option value = "oxyvalue">Oxy</option>
+  <option value = "deoxyvalue">DeOxy</option>
+</select><br><br>
+
+<label for="Excercise">Choose Excercise:</label>
+    <select name="excercise1" id="excercise">
+    <option >{{exercise.0}}</option>
+    <option >{{exercise.1}}</option>
+    <option >{{exercise.2}}</option>
+    <option >{{exercise.3}}</option>
+    </select><br><br>
+  <input type="submit" value="Submit">
+</form>
+
+</div>
+
+</body>
+</html>
