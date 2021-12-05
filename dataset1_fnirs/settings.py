@@ -84,6 +84,7 @@ DATABASES = {
         'HOST':'smd-project.postgres.database.azure.com',
         'PORT':'5432',
     }
+    
 }
 
 

@@ -15,9 +15,10 @@ urlpatterns= [
     path('Tplot',views.Temporal_Plot, name="Tplot"),
     path('Tplotform', views.Tplot_form, name='TplotForm'),
     
-    path('try', views.whatever, name='trypython'),
+    path('dataload', views.Data_load_Staging, name='dataload'),
     path('Splot', views.Spatial_Plot, name='Splot'),
     path('Splotform', views.Splot_form, name='SplotForm'),
+    path('staging', views.Data_load_page, name='staging'),
         
     
 

@@ -199,24 +199,155 @@ def Spatial_Plot(request):
       
     return render(request, 'Patient/SpatialPlot.html',{'name':uname,'oxydeoxy':Oxydeoxy,'exerid':exid}) 
 
-def whatever(request):
+def Data_load_Staging(request):
     
-    df=pd.read_csv(".\stagingfiles\VM0001_Moto_HBA_Probe1_Deoxy.csv",skiprows=40)
-    print(df)
+    
+    f = open(".\stagingfiles\VM0001_Moto_HBA_Probe1_Deoxy.csv", "r")
+    
+    for i in range(8):
+        info=f.readline()
+        if i==4:
+            ptname=info.split(',')[1]
+            ptname=ptname.rstrip()
+            print(ptname)
+        if i==6:
+            page=info.split(',')[1]
+            page=page.strip()
+            page=page.rstrip('y')   
+            print(page)
+        if i==7:
+            psex=info.split(',')[1]  
+            psex=psex.rstrip() 
+            print(psex)     
+        #print(f.readline())
+    f.close()
+    #print(df)
+    
+    
+    #Fetch Patient ID
+    cursordl1= connection.cursor()
+    queriesdl1=""" Select count(*) from Patient """
+    cursordl1.execute(queriesdl1)
+    pcount=cursordl1.fetchall()
+    pid='P'+str(int(pcount[0][0])+1)
+    
+    #Insert into PATIENT TABLE
+    cursorinsp = connection.cursor()
+    p1=ptname
+    p2=psex
+    p3=page
+    p0=pid
+    
+    queriespt=""" INSERT INTO Patient Values ('"""+ p0 + """','"""+ p1 + """','"""+ p2 +"""','"""+ p3+ """')"""
+    cursorinsp.execute(queriespt,{'p0':pid,'p1':ptname,'p2':psex,'p3':page})
+    
 
-    return render(request, 'Patient/trypython.html',{'query': df}) 
+    #Fetch PexID
+    cursordl11= connection.cursor()
+    queriesdl11=""" Select count(*) from PatientTreatment """
+    cursordl11.execute(queriesdl11)
+    pexid=cursordl11.fetchall()
+    pexid='PEx'+str(int(pexid[0][0])+1)
+
+    #Fetch ExerciseID based on ExerciseType enetered by DB  admin
+    extp= request.POST.get('excercisetype')
+    e=extp
    
+
+    cursordfex= connection.cursor()
+    queriesdfex=""" Select ExerciseID from Treatment where ExerciseType = '"""+ e +"""' """
+    cursordfex.execute(queriesdfex,{'e':extp})
+    exeridd=cursordfex.fetchall()
+    exeridd=exeridd[0][0]
+        
+    #Insert into PatientTreatment
+    cursor_PT = connection.cursor()
+    p01=pexid
+    p11=pid
+    p21=exeridd
+    
+    
+    querie_PT=""" INSERT INTO PatientTreatment  Values ('"""+ p01 + """','"""+ p11 + """','"""+ p21 +"""')"""
+    cursor_PT.execute(querie_PT,{'p01':pexid,'p11':pid,'p21':exeridd})
+    
+    #Fetch EndPointID
+    cursor_epi= connection.cursor()
+    queriesd_epi=""" Select count(*)  from Endpoint """
+    cursor_epi.execute(queriesd_epi)
+    endid=cursor_epi.fetchall()
+    endid=endid[0][0]
+    
+    #Code for Data transformation from excel
+    df=pd.read_csv(".\stagingfiles\VM0001_Moto_HBA_Probe1_Deoxy.csv",skiprows=40)
+    ddf=pd.read_csv(".\stagingfiles\VM0001_Moto_HBA_Probe1_Oxy.csv",skiprows=40)
+    lstcol=[0]
+    for i in range(25,49):
+        lstcol.append(i)
+    df.drop(df.columns[lstcol], axis = 1, inplace = True)
+    ddf.drop(ddf.columns[lstcol], axis = 1, inplace = True)
+
+    df2=df.transpose()
+    ddf2=ddf.transpose()
+
+    df3=df2.iloc[:,0]
+    ddf3=ddf2.iloc[:,0]
+
+    for i in range(1,2801):
+        df4=df2.iloc[:,i]
+        df5=pd.concat([df3,df4],axis=0)
+        df3=df5
+
+        ddf4=ddf2.iloc[:,i]
+        ddf5=pd.concat([ddf3,ddf4],axis=0)
+        ddf3=ddf5
+    concval=df5.values
+    concvalo=ddf5.values
+    
+    cnt=concval.shape[0]
+    lstchl=['CH1','CH2','CH3','CH4','CH5','CH6','CH7','CH8','CH9','CH10','CH11','CH12','CH13','CH14','CH15','CH16','CH17','CH18','CH19','CH20','CH21','CH22','CH23','CH24']
+    
+    #Insert to Endpoint TABLE
+    cursor_end = connection.cursor()
+    
+    
+    for i in range(1,int(cnt)):
+        j=((i-1)%24)
+        k=i-1
+        #endid+=i
+        #p4=endid
+        p5=lstchl[j]
+        p6=pexid
+        p7=concvalo[k].item()
+        p8=concval[k].item()
+        querie_end=""" INSERT INTO Endpoint (channelid,pexid,oxyvalue,deoxyvalue) Values  ('"""+ p5 + """' , '"""+ p6 +"""',"""+ str(p7) +""","""+ str(p8) +""")"""
+        cursor_end.execute(querie_end,{'p5':lstchl[j],'p6':pexid,'p7':concvalo[k].item(),'p8':concval[k].item()})
+
+    return render(request, 'Patient/trypython.html') 
+   
+  
 
 def register(request):
     return render(request, 'Patient/TplotForm.html')    
-        
+
+def Data_load_page(request):
+    return render(request, 'Patient/DLpage.html')         
 
 '''def dashboard_with_pivot(request):
     return render(request, 'dashboard_with_pivot.html', {})
 def pivot_data(request):
     dataset = Patient.objects.all()
     data = serializers.serialize('json', dataset)
-    return JsonResponse(data, safe=False)'''
+    return JsonResponse(data, safe=False)
+    
+def DL_page(request):
+    cursordl1= connection.cursor()
+    queriesdl1=""" Select count(*) from Patient """
+    cursordl1.execute(queriesdl1)
+    pcount=cursordl1.fetchall()
+    return render(request, 'Patient/DLpage.html',{'Pcount':pcount})     
+    
+    
+    '''
 #cursor = connection.cursor()
 #cursor.execute('''SELECT count(*) FROM Patient''')
 

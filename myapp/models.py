@@ -41,7 +41,6 @@ class Patient(models.Model):
     age = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'patient'
 
 
